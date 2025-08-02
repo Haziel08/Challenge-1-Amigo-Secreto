@@ -1,5 +1,6 @@
 // El principal objetivo de este desafío es fortalecer tus habilidades en lógica de programación. Aquí deberás desarrollar la lógica para resolver el problema.
 let nombreAmigos = [];
+let amigosSorteados = [];
 
 function agregarAmigo() {
     // Obtener el valor del input y agregarlo a la lista de amigos
@@ -37,13 +38,23 @@ function mostrarListaAmigos() {
 function sortearAmigo() {
     // Verificar que haya al menos dos amigos para sortear
     if (nombreAmigos.length >= 2) {
-        // Generar un número aleatorio para seleccionar un amigo
-        let indice = Math.floor(Math.random() * nombreAmigos.length);
-        // Seleccionar el amigo sorteado usando el índice aleatorio
-        let amigoSorteado = nombreAmigos[indice];
-        // Mostrar el resultado en el elemento <ul> con id 'resultado'
+        // Filtrar solo los amigos que no han sido sorteados aún
+        const disponibles = nombreAmigos.filter(a => !amigosSorteados.includes(a));
+        // Si no hay amigos disponibles, reiniciar el juego
+        if (disponibles.length === 0) {
+            alert('¡Todos los amigos ya fueron sorteados! El juego se reiniciará.');
+            reiniciarJuego();
+            return;
+        }
+
+        // Elegir al azar de entre los amigos disponibles
+        let indice = Math.floor(Math.random() * disponibles.length);
+        // Obtener el amigo sorteado y agregarlo a la lista de amigos sorteados
+        let amigoSorteado = disponibles[indice];
+        amigosSorteados.push(amigoSorteado);
+
+        // Mostrar resultado
         let resultado = document.getElementById('resultado');
-        // Limpiar el contenido previo del resultado
         resultado.innerHTML = `<li>Tu amigo secreto es: ${amigoSorteado}</li>`;
     } else {
         // Si no hay suficientes amigos, mostrar un mensaje de alerta
@@ -52,3 +63,11 @@ function sortearAmigo() {
 }
 
 
+
+function reiniciarJuego() {
+    nombreAmigos = [];
+    amigosSorteados = [];
+    document.getElementById('listaAmigos').innerHTML = '';
+    document.getElementById('resultado').innerHTML = '';
+    document.getElementById('amigo').value = '';
+}
